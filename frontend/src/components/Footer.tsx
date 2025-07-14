@@ -1,7 +1,27 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Heart, Linkedin, ExternalLink, AlertTriangle, BookOpen, Copy } from 'lucide-react';
+import { supabase } from '../lib/supabase'; // Adjust if your path is different
 
 const Footer: React.FC = () => {
+  const [visitCount, setVisitCount] = useState<number | null>(null);
+
+  useEffect(() => {
+    // Only increment for first-time visits (per browser)
+    const fetchAndIncrement = async () => {
+      if (!localStorage.getItem('visited-copypaste')) {
+        await supabase.rpc('increment_count');
+        localStorage.setItem('visited-copypaste', 'yes');
+      }
+      const { data } = await supabase
+        .from('visit_counts')
+        .select('count')
+        .eq('id', 1)
+        .single();
+      setVisitCount(data?.count ?? 0);
+    };
+    fetchAndIncrement();
+  }, []);
+
   return (
     <footer className="py-12 border-t border-gray-200 bg-gradient-to-r from-gray-50 to-gray-100">
       <div className="container mx-auto px-4">
@@ -19,6 +39,16 @@ const Footer: React.FC = () => {
               <br />
               Instantly copy, paste, and sync across devices—no hassle.
             </p>
+            {/* 👇 Visitor Counter */}
+            <div className="mt-2 text-xs text-gray-500">
+              {visitCount !== null ? (
+                <span>
+                  👀 <span className="font-semibold">{visitCount.toLocaleString()}</span> visits so far
+                </span>
+              ) : (
+                <span>Loading visits...</span>
+              )}
+            </div>
           </div>
 
           {/* Educational Notice */}
