@@ -1,23 +1,29 @@
 import React, { useEffect, useState } from 'react';
 import { Heart, Linkedin, ExternalLink, AlertTriangle, BookOpen, Copy } from 'lucide-react';
-import { supabase } from '../lib/supabase'; // Adjust if your path is different
+import { supabase } from '../lib/supabase'; // Adjust the import if your path differs
 
 const Footer: React.FC = () => {
   const [visitCount, setVisitCount] = useState<number | null>(null);
 
   useEffect(() => {
-    // Only increment for first-time visits (per browser)
     const fetchAndIncrement = async () => {
-      if (!localStorage.getItem('visited-copypaste')) {
-        await supabase.rpc('increment_count');
-        localStorage.setItem('visited-copypaste', 'yes');
+      try {
+        // Only increment for the first visit in this browser
+        if (!localStorage.getItem('visited-copypaste')) {
+          await supabase.rpc('increment_count');
+          localStorage.setItem('visited-copypaste', 'yes');
+        }
+        // Always fetch the current count
+        const { data, error } = await supabase
+          .from('visit_counts')
+          .select('count')
+          .eq('id', 1)
+          .single();
+        if (error) throw error;
+        setVisitCount(data?.count ?? 0);
+      } catch (e) {
+        setVisitCount(null);
       }
-      const { data } = await supabase
-        .from('visit_counts')
-        .select('count')
-        .eq('id', 1)
-        .single();
-      setVisitCount(data?.count ?? 0);
     };
     fetchAndIncrement();
   }, []);
