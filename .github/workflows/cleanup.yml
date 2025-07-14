@@ -1,0 +1,17 @@
+name: Delete expired CopyPaste rooms
+
+on:
+  schedule:
+    - cron: '*/1 * * * *'   # every 1 minute UTC
+
+jobs:
+  delete-expired-rooms:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call Supabase delete_expired_pastes function
+        run: |
+          curl -X POST \
+            "${{ secrets.SUPABASE_URL }}/rest/v1/rpc/delete_expired_pastes" \
+            -H "apikey: ${{ secrets.SUPABASE_SERVICE_KEY }}" \
+            -H "Authorization: Bearer ${{ secrets.SUPABASE_SERVICE_KEY }}" \
+            -H "Content-Type: application/json"
