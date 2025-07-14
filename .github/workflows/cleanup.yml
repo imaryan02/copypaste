@@ -3,6 +3,7 @@ name: Delete expired CopyPaste rooms
 on:
   schedule:
     - cron: '*/1 * * * *'   # every 1 minute UTC
+  workflow_dispatch:         # <-- enables "Run workflow" button in GitHub UI
 
 jobs:
   delete-expired-rooms:
