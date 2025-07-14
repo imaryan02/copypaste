@@ -42,16 +42,19 @@ const Footer: React.FC = () => {
 
           {/* Creator & Connect */}
           <div className="text-center md:text-right flex flex-col items-center md:items-end">
-            <span className="font-semibold text-gray-800 mb-3">Made with
+            <span className="font-semibold text-gray-800 mb-3">
+              Made with
               <Heart size={14} className="inline text-red-500 mx-1 animate-pulse" />
-              by Aryan Gupta
-              <span
-                className="inline-block ml-1 align-middle"
-                style={{
-                  animation: "blink 2.5s infinite",
-                  fontSize: "1.05em"
-                }}
-              >😉</span>
+              <span className="signature text-blue-700 font-semibold text-base tracking-wide ml-1">
+                Aryan Gupta
+                <span
+                  className="inline-block ml-1 align-middle"
+                  style={{
+                    animation: "blink 2.5s infinite",
+                    fontSize: "1.05em"
+                  }}
+                >😉</span>
+              </span>
             </span>
             <a
               href="https://www.linkedin.com/in/imaryan02/"
@@ -59,16 +62,21 @@ const Footer: React.FC = () => {
               rel="noopener noreferrer"
               className="inline-flex items-center space-x-2 mt-3 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition font-medium shadow group"
               aria-label="Aryan Gupta LinkedIn"
-              style={{ fontFamily: 'cursive, "Pacifico", "Fira Script", "Dancing Script", sans-serif' }}
             >
               <Linkedin size={16} className="group-hover:scale-110 transition-transform" />
-              <span className="tracking-wide font-bold" style={{ fontFamily: 'inherit' }}>Connect on LinkedIn</span>
+              <span className="tracking-wide font-bold signature">Connect on LinkedIn</span>
               <ExternalLink size={13} />
             </a>
             <style>{`
               @keyframes blink {
                 0%, 90%, 100% { opacity: 1; }
                 92%, 94% { opacity: 0.2; }
+              }
+              .signature {
+                font-family: 'Inter', 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+                letter-spacing: 0.03em;
+                text-shadow: 0 1px 2px rgba(30, 64, 175, 0.07);
+                transition: color 0.2s;
               }
             `}</style>
           </div>

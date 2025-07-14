@@ -36,10 +36,9 @@ const Navbar: React.FC = () => {
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center bg-white/70 hover:bg-blue-50 border border-blue-100 rounded-full pl-2 pr-4 py-1.5 shadow transition group space-x-2"
-              style={{ fontFamily: 'cursive, "Pacifico", "Fira Script", "Dancing Script", sans-serif' }}
             >
               <Linkedin size={16} className="text-blue-600 group-hover:scale-110 transition-transform" />
-              <span className="text-blue-700 font-bold text-base" style={{ fontFamily: 'inherit' }}>
+              <span className="signature text-blue-700 font-semibold text-[1.05rem] tracking-wide ml-1">
                 Aryan Gupta
                 <span
                   className="inline-block ml-1"
@@ -56,6 +55,12 @@ const Navbar: React.FC = () => {
               @keyframes blink {
                 0%, 90%, 100% { opacity: 1; }
                 92%, 94% { opacity: 0.2; }
+              }
+              .signature {
+                font-family: 'Inter', 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+                letter-spacing: 0.03em;
+                text-shadow: 0 1px 2px rgba(30, 64, 175, 0.08);
+                transition: color 0.2s;
               }
             `}</style>
           </div>
