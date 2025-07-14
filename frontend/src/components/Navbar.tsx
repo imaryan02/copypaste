@@ -26,6 +26,7 @@ const Navbar: React.FC = () => {
 
           {/* Right side - Creator signature */}
           <div className="flex items-center space-x-2">
+            {/* Show this only on md+ screens */}
             <span className="hidden sm:inline text-xs text-gray-500 italic tracking-wide">
               Built with
               <span className="mx-1 animate-pulse" style={{ color: "#e63946" }}>❤️</span>
@@ -38,7 +39,8 @@ const Navbar: React.FC = () => {
               className="flex items-center bg-white/70 hover:bg-blue-50 border border-blue-100 rounded-full pl-2 pr-4 py-1.5 shadow transition group space-x-2"
             >
               <Linkedin size={16} className="text-blue-600 group-hover:scale-110 transition-transform" />
-              <span className="signature text-blue-700 font-semibold text-[1.05rem] tracking-wide ml-1">
+              {/* Full signature on desktop, minimal on mobile */}
+              <span className="signature text-blue-700 font-semibold text-[1.05rem] tracking-wide ml-1 hidden sm:inline">
                 Aryan Gupta
                 <span
                   className="inline-block ml-1"
@@ -47,6 +49,9 @@ const Navbar: React.FC = () => {
                     fontSize: "1.1em"
                   }}
                 >😉</span>
+              </span>
+              <span className="signature text-blue-700 font-semibold text-[1.05rem] tracking-wide ml-1 sm:hidden">
+                Aryan
               </span>
               <ExternalLink size={14} className="text-gray-400 group-hover:text-blue-700 transition-colors" />
             </a>
