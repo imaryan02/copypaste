@@ -23,7 +23,7 @@ const TextSyncBox: React.FC<TextSyncBoxProps> = ({
   const channelRef = useRef<RealtimeChannel | null>(null);
   const updateTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Auto-resize textarea based on content
+  // Auto-resize textarea
   useEffect(() => {
     const textarea = textareaRef.current;
     if (textarea) {
@@ -32,14 +32,14 @@ const TextSyncBox: React.FC<TextSyncBoxProps> = ({
     }
   }, [content]);
 
-  // Fetch initial content or create new room
+  // Fetch or create room (initial content load)
   useEffect(() => {
     const fetchOrCreateRoom = async () => {
       try {
         setLoading(true);
         setError(null);
 
-        // First, try to fetch existing room
+        // Try to fetch existing room
         const { data, error: fetchError } = await supabase
           .from('pastes')
           .select('*')
@@ -47,7 +47,7 @@ const TextSyncBox: React.FC<TextSyncBoxProps> = ({
           .single();
 
         if (fetchError && fetchError.code === 'PGRST116') {
-          // Room doesn't exist, create it
+          // Not found, create new room
           const { error: insertError } = await supabase
             .from('pastes')
             .insert({
@@ -55,10 +55,7 @@ const TextSyncBox: React.FC<TextSyncBoxProps> = ({
               content: ''
             });
 
-          if (insertError) {
-            throw new Error(`Failed to create room: ${insertError.message}`);
-          }
-
+          if (insertError) throw new Error(`Failed to create room: ${insertError.message}`);
           setContent('');
         } else if (fetchError) {
           throw new Error(`Failed to fetch room: ${fetchError.message}`);
@@ -86,7 +83,7 @@ const TextSyncBox: React.FC<TextSyncBoxProps> = ({
     fetchOrCreateRoom();
   }, [roomId, onConnectionChange]);
 
-  // Set up real-time subscription
+  // Set up realtime subscription (dependencies FIXED)
   useEffect(() => {
     if (!connected || loading) return;
 
@@ -102,10 +99,13 @@ const TextSyncBox: React.FC<TextSyncBoxProps> = ({
         },
         (payload) => {
           const newContent = payload.new.content as string;
-          // Only update if content is different and user is not currently typing
-          if (newContent !== content && !isTyping) {
-            setContent(newContent);
-          }
+          setContent((prevContent) => {
+            // Only update if not typing and content actually changed
+            if (newContent !== prevContent && !isTyping) {
+              return newContent;
+            }
+            return prevContent;
+          });
         }
       )
       .subscribe((status) => {
@@ -121,23 +121,23 @@ const TextSyncBox: React.FC<TextSyncBoxProps> = ({
 
     channelRef.current = channel;
 
+    // Clean up on unmount/room change
     return () => {
       if (channelRef.current) {
         supabase.removeChannel(channelRef.current);
         channelRef.current = null;
       }
     };
-  }, [roomId, connected, loading, content, isTyping, onConnectionChange]);
+    // Dependencies: ONLY roomId, connected, loading
+  }, [roomId, connected, loading, onConnectionChange, isTyping]);
 
-  // Handle content changes with debounced updates
+  // Handle content changes with debounce
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const newContent = e.target.value;
     setContent(newContent);
     setIsTyping(true);
 
-    if (updateTimeoutRef.current) {
-      clearTimeout(updateTimeoutRef.current);
-    }
+    if (updateTimeoutRef.current) clearTimeout(updateTimeoutRef.current);
 
     updateTimeoutRef.current = setTimeout(async () => {
       try {
@@ -159,7 +159,7 @@ const TextSyncBox: React.FC<TextSyncBoxProps> = ({
       } finally {
         setIsTyping(false);
       }
-    }, 500); // 500ms debounce
+    }, 500);
   };
 
   const handleCopy = async () => {
@@ -200,9 +200,7 @@ const TextSyncBox: React.FC<TextSyncBoxProps> = ({
 
   useEffect(() => {
     return () => {
-      if (updateTimeoutRef.current) {
-        clearTimeout(updateTimeoutRef.current);
-      }
+      if (updateTimeoutRef.current) clearTimeout(updateTimeoutRef.current);
     };
   }, []);
 
