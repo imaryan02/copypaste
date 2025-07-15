@@ -1,19 +1,26 @@
 import { createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || 'https://dummy-project.supabase.co';
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR1bW15LXByb2plY3QiLCJyb2xlIjoiYW5vbiIsImlhdCI6MTY0NjA2NzI2MCwiZXhwIjoxOTYxNjQzMjYwfQ.dummy-anon-key-for-development';
+// Get values from .env (must be set in root)
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
-// Note: Using dummy values for development. Replace with actual Supabase credentials.
-console.warn('Using dummy Supabase values. Please set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in your .env file for production.');
+// Hard error if not set
+if (!supabaseUrl || !supabaseAnonKey) {
+  throw new Error(
+    '[Supabase] Missing environment variables! Please set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in your .env file.'
+  );
+}
 
+// Create Supabase client
 export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
-  realtime: {
-    params: {
-      eventsPerSecond: 10,
-    },
-  },
+  realtime: { params: { eventsPerSecond: 10 } },
 });
 
+// Optional: Debug log (remove/comment out in production)
+console.log('[Supabase] Using URL:', supabaseUrl);
+console.log('[Supabase] Using ANON KEY:', supabaseAnonKey?.slice(0, 8) + '...');
+
+// Types
 export type Database = {
   public: {
     Tables: {
