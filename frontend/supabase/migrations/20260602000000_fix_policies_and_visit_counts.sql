@@ -1,22 +1,5 @@
--- Enable pgcrypto extension for uuid generation (if not already present)
-CREATE EXTENSION IF NOT EXISTS "pgcrypto";
+-- Tighten public paste access and add the visitor counter used by the footer.
 
--- Create the pastes table
-CREATE TABLE IF NOT EXISTS pastes (
-  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  room_id text NOT NULL,
-  content text DEFAULT '',
-  created_at timestamptz DEFAULT now(),
-  updated_at timestamptz DEFAULT now()
-);
-
--- Create unique index on room_id to ensure one paste per room
-CREATE UNIQUE INDEX IF NOT EXISTS pastes_room_id_idx ON pastes(room_id);
-
--- Enable Row Level Security
-ALTER TABLE pastes ENABLE ROW LEVEL SECURITY;
-
--- Allow public room usage without allowing public deletes
 DROP POLICY IF EXISTS "Allow public access to pastes" ON pastes;
 DROP POLICY IF EXISTS "Allow public read access to pastes" ON pastes;
 DROP POLICY IF EXISTS "Allow public insert access to pastes" ON pastes;
@@ -41,7 +24,6 @@ CREATE POLICY "Allow public update access to pastes"
   USING (true)
   WITH CHECK (true);
 
--- Enable realtime for the pastes table
 DO $$
 BEGIN
   IF NOT EXISTS (
@@ -55,22 +37,6 @@ BEGIN
   END IF;
 END $$;
 
--- Create function to automatically update updated_at timestamp
-CREATE OR REPLACE FUNCTION update_updated_at_column()
-RETURNS TRIGGER AS $$
-BEGIN
-  NEW.updated_at = now();
-  RETURN NEW;
-END;
-$$ language 'plpgsql';
-
--- Create trigger to automatically update updated_at
-CREATE TRIGGER update_pastes_updated_at
-  BEFORE UPDATE ON pastes
-  FOR EACH ROW
-  EXECUTE FUNCTION update_updated_at_column();
-
--- Create visitor counter used by the app footer
 CREATE TABLE IF NOT EXISTS visit_counts (
   id integer PRIMARY KEY DEFAULT 1,
   count integer NOT NULL DEFAULT 0,

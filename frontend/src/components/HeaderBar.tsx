@@ -11,8 +11,7 @@ const HeaderBar: React.FC<HeaderBarProps> = ({ roomId, connectionStatus, onLeave
   const handleCopyRoomId = async () => {
     try {
       await navigator.clipboard.writeText(roomId);
-    } catch (err) {
-      // Optionally, show toast error
+    } catch {
       alert('Failed to copy Room ID');
     }
   };

@@ -41,18 +41,18 @@ const HomePage: React.FC = () => {
   const steps = [
     {
       icon: <Plus className="w-6 h-6" />,
-      title: "Create or Join a Room",
-      description: "Generate a unique room ID or enter an existing one"
+      title: 'Create or Join a Room',
+      description: 'Generate a unique room ID or enter an existing one'
     },
     {
       icon: <Copy className="w-6 h-6" />,
-      title: "Paste your content",
-      description: "Share text, code, or notes in the secure room"
+      title: 'Paste your content',
+      description: 'Share text, code, or notes in the secure room'
     },
     {
       icon: <Globe className="w-6 h-6" />,
-      title: "Instantly view it from another device",
-      description: "Real-time sync across all connected devices"
+      title: 'Instantly view it from another device',
+      description: 'Real-time sync across all connected devices'
     }
   ];
 
@@ -61,7 +61,6 @@ const HomePage: React.FC = () => {
       <Navbar />
       <div className="flex-1 flex flex-col items-center justify-center px-4 py-12">
         <div className="w-full max-w-4xl mx-auto">
-          {/* Hero Section */}
           <div className="text-center mb-8 animate-fade-in">
             <h1 className="text-6xl md:text-7xl font-bold gradient-text mb-6">
               CopyPaste
@@ -71,10 +70,9 @@ const HomePage: React.FC = () => {
             </p>
           </div>
 
-          {/* How it works - directly below hero */}
           <div className="grid md:grid-cols-3 gap-8 mb-12">
             {steps.map((step, index) => (
-              <div 
+              <div
                 key={index}
                 className="animate-slide-up glass-effect rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
                 style={{ animationDelay: `${index * 0.2}s` }}
@@ -92,16 +90,14 @@ const HomePage: React.FC = () => {
             ))}
           </div>
 
-          {/* Instruction Block */}
           <div className="mb-6 text-sm text-gray-600 text-center bg-blue-50 border border-blue-200 rounded-xl p-4 shadow-sm">
-            <p className="mb-1 font-medium">🧭 How to use:</p>
+            <p className="mb-1 font-medium">How to use:</p>
             <ul className="list-disc list-inside text-left text-sm">
               <li><strong>If you already have a Room ID</strong>, enter it and click <span className="text-blue-600 font-semibold">Join Room</span>.</li>
               <li><strong>If you want to start fresh</strong>, click <span className="text-blue-600 font-semibold">Create Room</span> and share the generated ID with others.</li>
             </ul>
           </div>
 
-          {/* Input Form */}
           <div className="max-w-md mx-auto animate-slide-up" style={{ animationDelay: '0.6s' }}>
             <div className="glass-effect rounded-2xl p-8 shadow-xl">
               <div className="space-y-6">
@@ -122,6 +118,7 @@ const HomePage: React.FC = () => {
                       <button
                         onClick={handleCopyRoomId}
                         className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-blue-500 transition-colors p-1 rounded-lg hover:bg-blue-50"
+                        aria-label="Copy Room ID"
                       >
                         <Copy size={18} />
                       </button>
@@ -131,7 +128,6 @@ const HomePage: React.FC = () => {
               </div>
             </div>
 
-            {/* Action Buttons */}
             <div className="mt-8 space-y-4">
               <button
                 onClick={handleCreateRoom}
@@ -150,7 +146,7 @@ const HomePage: React.FC = () => {
                   </>
                 )}
               </button>
-              
+
               <button
                 onClick={handleJoinRoom}
                 disabled={!roomId.trim()}

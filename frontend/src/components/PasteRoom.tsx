@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Navbar from './Navbar';
 import HeaderBar from './HeaderBar';
@@ -9,18 +9,10 @@ const PasteRoom: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
 
-  const [isConnected, setIsConnected] = useState(false);
   const [connectionStatus, setConnectionStatus] = useState<'connecting' | 'connected' | 'disconnected'>('connecting');
 
-  // Handle connection status changes from TextSyncBox
-  const handleConnectionChange = (connected: boolean) => {
-    setIsConnected(connected);
+  const handleConnectionChange = useCallback((connected: boolean) => {
     setConnectionStatus(connected ? 'connected' : 'disconnected');
-  };
-
-  // Initial connection status
-  useEffect(() => {
-    setConnectionStatus('connecting');
   }, []);
 
   const handleLeave = () => {

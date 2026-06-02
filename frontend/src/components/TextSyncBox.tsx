@@ -21,7 +21,12 @@ const TextSyncBox: React.FC<TextSyncBoxProps> = ({
   const [error, setError] = useState<string | null>(null);
   const [isTyping, setIsTyping] = useState(false);
   const channelRef = useRef<RealtimeChannel | null>(null);
-  const updateTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const isTypingRef = useRef(false);
+  const updateTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    isTypingRef.current = isTyping;
+  }, [isTyping]);
 
   // Auto-resize textarea
   useEffect(() => {
@@ -83,7 +88,7 @@ const TextSyncBox: React.FC<TextSyncBoxProps> = ({
     fetchOrCreateRoom();
   }, [roomId, onConnectionChange]);
 
-  // Set up realtime subscription (dependencies FIXED)
+  // Set up realtime subscription
   useEffect(() => {
     if (!connected || loading) return;
 
@@ -101,7 +106,7 @@ const TextSyncBox: React.FC<TextSyncBoxProps> = ({
           const newContent = payload.new.content as string;
           setContent((prevContent) => {
             // Only update if not typing and content actually changed
-            if (newContent !== prevContent && !isTyping) {
+            if (newContent !== prevContent && !isTypingRef.current) {
               return newContent;
             }
             return prevContent;
@@ -128,8 +133,7 @@ const TextSyncBox: React.FC<TextSyncBoxProps> = ({
         channelRef.current = null;
       }
     };
-    // Dependencies: ONLY roomId, connected, loading
-  }, [roomId, connected, loading, onConnectionChange, isTyping]);
+  }, [roomId, connected, loading, onConnectionChange]);
 
   // Handle content changes with debounce
   const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {

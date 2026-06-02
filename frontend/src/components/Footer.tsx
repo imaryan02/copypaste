@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Heart, Linkedin, ExternalLink, AlertTriangle, BookOpen, Copy } from 'lucide-react';
-import { supabase } from '../lib/supabase'; // Adjust the import if your path differs
+import { supabase } from '../lib/supabase';
 
 const Footer: React.FC = () => {
   const [visitCount, setVisitCount] = useState<number | null>(null);
@@ -8,23 +8,25 @@ const Footer: React.FC = () => {
   useEffect(() => {
     const fetchAndIncrement = async () => {
       try {
-        // Only increment for the first visit in this browser
         if (!localStorage.getItem('visited-copypaste')) {
-          await supabase.rpc('increment_count');
+          const { error: incrementError } = await supabase.rpc('increment_count');
+          if (incrementError) throw incrementError;
           localStorage.setItem('visited-copypaste', 'yes');
         }
-        // Always fetch the current count
+
         const { data, error } = await supabase
           .from('visit_counts')
           .select('count')
           .eq('id', 1)
           .single();
+
         if (error) throw error;
         setVisitCount(data?.count ?? 0);
-      } catch (e) {
+      } catch {
         setVisitCount(null);
       }
     };
+
     fetchAndIncrement();
   }, []);
 
@@ -32,7 +34,6 @@ const Footer: React.FC = () => {
     <footer className="py-12 border-t border-gray-200 bg-gradient-to-r from-gray-50 to-gray-100">
       <div className="container mx-auto px-4">
         <div className="grid md:grid-cols-3 gap-10 mb-10">
-          {/* Brand & Mission */}
           <div className="text-center md:text-left flex flex-col items-center md:items-start">
             <div className="flex items-center space-x-3 mb-3">
               <span className="w-8 h-8 bg-gradient-to-r from-blue-600 to-blue-700 rounded-lg flex items-center justify-center shadow">
@@ -43,13 +44,12 @@ const Footer: React.FC = () => {
             <p className="text-gray-600 text-sm">
               <span className="font-medium">Seamless. Private. Real-time.</span>
               <br />
-              Instantly copy, paste, and sync across devices—no hassle.
+              Instantly copy, paste, and sync across devices - no hassle.
             </p>
-            {/* 👇 Visitor Counter */}
             <div className="mt-2 text-xs text-gray-500">
               {visitCount !== null ? (
                 <span>
-                  👀 <span className="font-semibold">{visitCount.toLocaleString()}</span> visits so far
+                  Visits: <span className="font-semibold">{visitCount.toLocaleString()}</span>
                 </span>
               ) : (
                 <span>Loading visits...</span>
@@ -57,7 +57,6 @@ const Footer: React.FC = () => {
             </div>
           </div>
 
-          {/* Educational Notice */}
           <div className="text-center flex flex-col items-center justify-center">
             <div className="flex items-center gap-2 mb-2">
               <BookOpen size={19} className="text-amber-600" />
@@ -69,27 +68,20 @@ const Footer: React.FC = () => {
                 <div className="text-amber-800 text-xs text-left">
                   <span className="font-medium">Learning Project</span>
                   <br />
-                  This tool is for learning and demonstration only.<br />
+                  This tool is for learning and demonstration only.
+                  <br />
                   Do not use for confidential or production data.
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Creator & Connect */}
           <div className="text-center md:text-right flex flex-col items-center md:items-end">
             <span className="font-semibold text-gray-800 mb-3">
               Made with
               <Heart size={14} className="inline text-red-500 mx-1 animate-pulse" />
               <span className="signature text-blue-700 font-semibold text-base tracking-wide ml-1">
                 Aryan Gupta
-                <span
-                  className="inline-block ml-1 align-middle"
-                  style={{
-                    animation: "blink 2.5s infinite",
-                    fontSize: "1.05em"
-                  }}
-                >😉</span>
               </span>
             </span>
             <a
@@ -117,14 +109,14 @@ const Footer: React.FC = () => {
             `}</style>
           </div>
         </div>
-        {/* Divider */}
+
         <div className="border-t border-gray-300 pt-6 mt-4">
           <div className="flex flex-col md:flex-row items-center justify-between text-sm text-gray-500 space-y-4 md:space-y-0">
             <div className="flex items-center space-x-2">
-              <span>© 2025 CopyPaste</span>
-              <span>•</span>
+              <span>(c) 2025 CopyPaste</span>
+              <span>|</span>
               <span>Educational Project</span>
-              <span>•</span>
+              <span>|</span>
               <span>React & Supabase</span>
             </div>
             <div className="flex items-center space-x-2">
