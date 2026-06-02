@@ -1,5 +1,8 @@
 {
   "rewrites": [
+    { "source": "/copypasteguru/assets/:path*", "destination": "/assets/:path*" },
+    { "source": "/copypasteguru/:path*", "destination": "/" },
+    { "source": "/copypasteguru", "destination": "/" },
     { "source": "/(.*)", "destination": "/" }
   ]
 }
