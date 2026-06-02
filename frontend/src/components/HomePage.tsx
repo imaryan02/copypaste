@@ -64,22 +64,22 @@ const HomePage: React.FC = () => {
   ];
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col overflow-x-hidden">
       <Navbar />
-      <div className="flex-1 flex flex-col items-center justify-center px-4 py-12">
+      <div className="flex-1 flex flex-col items-center justify-center px-4 py-8 sm:py-12">
         <div className="w-full max-w-5xl mx-auto">
-          <div className="text-center mb-8 animate-fade-in">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/80 border border-blue-100 text-sm font-semibold text-blue-700 shadow-sm mb-5">
+          <div className="text-center mb-6 sm:mb-8 animate-fade-in">
+            <div className="inline-flex max-w-full items-center gap-2 px-3 sm:px-4 py-2 rounded-full bg-white/80 border border-blue-100 text-xs sm:text-sm font-semibold text-blue-700 shadow-sm mb-4 sm:mb-5">
               <Clock size={16} />
-              Temporary real-time text rooms
+              <span className="truncate">Temporary real-time text rooms</span>
             </div>
-            <h1 className="text-5xl md:text-7xl font-bold gradient-text mb-5">
+            <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold gradient-text mb-4 sm:mb-5 leading-tight break-words">
               CopyPasteGuru
             </h1>
-            <p className="text-xl md:text-2xl text-gray-700 mb-4 font-semibold">
+            <p className="text-lg sm:text-xl md:text-2xl text-gray-700 mb-3 sm:mb-4 font-semibold">
               Share text between devices without logging in.
             </p>
-            <p className="max-w-2xl mx-auto text-base md:text-lg text-gray-600 leading-relaxed mb-8">
+            <p className="max-w-2xl mx-auto text-sm sm:text-base md:text-lg text-gray-600 leading-relaxed mb-6 sm:mb-8">
               Create a room, paste your content, and use the same room ID on another phone,
               laptop, or browser. Everyone in the room sees the latest text automatically.
             </p>
@@ -109,16 +109,16 @@ const HomePage: React.FC = () => {
               </div>
             </div>
 
-            <div className="animate-slide-up" style={{ animationDelay: '0.2s' }}>
+            <div className="min-w-0 animate-slide-up" style={{ animationDelay: '0.2s' }}>
               <div className="mb-5 text-sm text-gray-600 bg-blue-50 border border-blue-200 rounded-xl p-4 shadow-sm">
                 <p className="mb-2 font-semibold text-gray-800">Use a room to share text instantly:</p>
-                <ul className="list-disc list-inside text-left text-sm space-y-1">
+                <ul className="list-disc list-outside pl-5 text-left text-sm space-y-1">
                   <li><strong>Have a Room ID?</strong> Enter it and click <span className="text-blue-600 font-semibold">Join Room</span>.</li>
                   <li><strong>Starting fresh?</strong> Click <span className="text-blue-600 font-semibold">Create Room</span>, then share the room ID.</li>
                 </ul>
               </div>
 
-              <div className="glass-effect rounded-2xl p-8 shadow-xl">
+              <div className="glass-effect rounded-2xl p-5 sm:p-8 shadow-xl">
                 <div className="space-y-6">
                   <div>
                     <label htmlFor="roomId" className="block text-sm font-semibold text-gray-700 mb-3">
